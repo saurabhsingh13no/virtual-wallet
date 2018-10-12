@@ -17,4 +17,4 @@ At a high level the library needs to solve the following business needs
 ## UML Diagram
 
 
-<a href="https://ibb.co/g0iBtp"><img src="https://preview.ibb.co/n2NRR9/UML-diagram.png" alt="UML-diagram" border="0"></a>
+<a href="https://ibb.co/kjd8Op"><img src="https://preview.ibb.co/b7fcG9/virtual-wallet-UML.png" alt="virtual-wallet-UML" border="0"></a>
