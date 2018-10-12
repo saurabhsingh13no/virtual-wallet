@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface CustomerRepository extends CrudRepository<Customer, Integer> {
 
     @Query("SELECT c FROM Customer c WHERE c.email=:email")
-    Iterable<Customer> findCustomerByEmal(@Param("email") String email);
+    Iterable<Customer> findCustomerByEmail(@Param("email") String email);
 
 
 }

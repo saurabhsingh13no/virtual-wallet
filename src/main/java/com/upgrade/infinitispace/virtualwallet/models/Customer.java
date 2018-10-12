@@ -21,15 +21,16 @@ public class Customer implements Serializable {
     private Wallet wallet;
 
     @OneToMany(mappedBy = "accountHolder")
-    @JsonIgnore
     private List<Account> customerAccounts;
 
     private static final long serialVersionUID = 1L;
 
     public Customer() {
+        super();
     }
 
     public Customer(String fname, String lname, String email) {
+        super();
         this.fname = fname;
         this.lname = lname;
         this.email = email;

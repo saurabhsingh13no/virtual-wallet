@@ -23,7 +23,6 @@ public class Account implements Serializable {
     private Wallet walletHolder;
 
     @OneToMany(mappedBy = "transactionFromAccount")
-    @JsonIgnore
     private List<BankTransaction> bankTransactions;
 
     private static final long serialVersionUID = 1L;
