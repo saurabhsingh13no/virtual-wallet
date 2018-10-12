@@ -14,5 +14,7 @@ At a high level the library needs to solve the following business needs
 * Keep a history of last N transactions.
 
 
+## UML Diagram
 
-<a href="https://ibb.co/g0iBtp"><img src="https://thumb.ibb.co/g0iBtp/UML-diagram.png" alt="UML-diagram" border="1"></a>
+
+<a href="https://ibb.co/g0iBtp"><img src="https://preview.ibb.co/n2NRR9/UML-diagram.png" alt="UML-diagram" border="0"></a>
