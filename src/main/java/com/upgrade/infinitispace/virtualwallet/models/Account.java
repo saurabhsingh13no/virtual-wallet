@@ -16,11 +16,11 @@ public class Account implements Serializable {
 
     @ManyToOne
     @JsonIgnore
-    private int customerId;
+    private Customer accountHolder;
 
     @ManyToOne
     @JsonIgnore
-    private int walletNumber;
+    private Wallet walletHolder;
 
     @OneToMany(mappedBy = "transactionFromAccount")
     @JsonIgnore
@@ -31,11 +31,6 @@ public class Account implements Serializable {
     public Account() {
     }
 
-    public Account(float balance, int customerId, int walletNumber) {
-        this.balance = balance;
-        this.customerId = customerId;
-        this.walletNumber = walletNumber;
-    }
 
     public int getAccountNumber() {
         return accountNumber;
@@ -53,19 +48,27 @@ public class Account implements Serializable {
         this.balance = balance;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getAccountHolder() {
+        return accountHolder;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setAccountHolder(Customer accountHolder) {
+        this.accountHolder = accountHolder;
     }
 
-    public int getWalletNumber() {
-        return walletNumber;
+    public List<BankTransaction> getBankTransactions() {
+        return bankTransactions;
     }
 
-    public void setWalletNumber(int walletNumber) {
-        this.walletNumber = walletNumber;
+    public void setBankTransactions(List<BankTransaction> bankTransactions) {
+        this.bankTransactions = bankTransactions;
+    }
+
+    public Wallet getWalletHolder() {
+        return walletHolder;
+    }
+
+    public void setWalletHolder(Wallet walletHolder) {
+        this.walletHolder = walletHolder;
     }
 }

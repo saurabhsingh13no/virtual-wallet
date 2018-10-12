@@ -16,11 +16,11 @@ public class Customer implements Serializable {
     private String lname;
     private String email;
 
-    @OneToOne(mappedBy = "customerId")
+    @OneToOne(mappedBy = "walletOfCustomer")
     @JsonIgnore
     private Wallet wallet;
 
-    @OneToMany(mappedBy = "customerId")
+    @OneToMany(mappedBy = "accountHolder")
     @JsonIgnore
     private List<Account> customerAccounts;
 

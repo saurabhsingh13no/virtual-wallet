@@ -13,13 +13,13 @@ public class Wallet implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // to set as autoincrement
     private int walletId;
 
-    @OneToMany(mappedBy = "walletNumber")
+    @OneToMany(mappedBy = "walletHolder")
     @JsonIgnore
     private List<Account> accountsInWallet;
 
     @OneToOne
     @JsonIgnore
-    private int customerId;
+    private Customer walletOfCustomer;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,11 +43,11 @@ public class Wallet implements Serializable {
         this.accountsInWallet = accountsInWallet;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public Customer getWalletOfCustomer() {
+        return walletOfCustomer;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setWalletOfCustomer(Customer walletOfCustomer) {
+        this.walletOfCustomer = walletOfCustomer;
     }
 }
