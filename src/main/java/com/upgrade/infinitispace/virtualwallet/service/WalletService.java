@@ -1,5 +1,6 @@
 package com.upgrade.infinitispace.virtualwallet.service;
 
+import com.upgrade.infinitispace.virtualwallet.comparator.BankTransactionSortingComparator;
 import com.upgrade.infinitispace.virtualwallet.constant.Constants;
 import com.upgrade.infinitispace.virtualwallet.exception.*;
 import com.upgrade.infinitispace.virtualwallet.models.Account;
@@ -13,9 +14,7 @@ import com.upgrade.infinitispace.virtualwallet.repository.BankTansactionReposito
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class WalletService {
@@ -104,19 +103,7 @@ public class WalletService {
             InsufficientBalanceInWallet, AccountNotAssociatedWithWallet {
         Wallet wallet = walletRepository.findById(walletId).orElse(null);
 
-        // handle: wallet does not exist
-        if (wallet == null) {
-            throw new WalletIdDoesNotExist(walletId);
-        }
-
-        // handle: account is not linked to wallet
-        List<Integer> associatedAccounts = new ArrayList<>();
-        for (Account account : wallet.getAccountsInWallet()) {
-            associatedAccounts.add(account.getAccountNumber());
-        }
-        if (!associatedAccounts.contains(accountId)) {
-            throw new AccountNotAssociatedWithWallet(walletId, accountId);
-        }
+        handleWalletAccountException(wallet, walletId, accountId);
 
         // handle account in wallet does not sufficient balance
         if (getAccountBalance(walletId, accountId) <= amount) {
@@ -135,6 +122,82 @@ public class WalletService {
 
         return amount;
     }
+
+    // Handle exception if :
+    //   a) Wallet does not exist
+    //   b) Account is not linked to wallet
+    private void handleWalletAccountException(Wallet wallet, int walletId, int accountId) throws WalletIdDoesNotExist,
+            AccountNotAssociatedWithWallet {
+        // handle: wallet does not exist
+        if (wallet == null) {
+            throw new WalletIdDoesNotExist(walletId);
+        }
+
+        // handle: account is not linked to wallet
+        List<Integer> associatedAccounts = new ArrayList<>();
+        for (Account account : wallet.getAccountsInWallet()) {
+            associatedAccounts.add(account.getAccountNumber());
+        }
+        if (!associatedAccounts.contains(accountId)) {
+            throw new AccountNotAssociatedWithWallet(walletId, accountId);
+        }
+    }
+
+    @PostMapping("/api/wallet/{walletId}/account/{accountId}/deposit/{amount}")
+    public float deposit(@PathVariable("walletId") int walletId,
+                         @PathVariable("accountId") int accountId,
+                         @PathVariable("amount") float amount) throws WalletIdDoesNotExist, AccountNotAssociatedWithWallet {
+        Wallet wallet = walletRepository.findById(walletId).orElse(null);
+
+        handleWalletAccountException(wallet, walletId, accountId);
+
+        // deposit amount
+        Account associateAccount = ((List<Account>) accountRepository.findAccountByNumber(accountId)).get(0);
+        float currentBalance = associateAccount.getBalance();
+        associateAccount.setBalance(currentBalance + amount);
+        accountRepository.save(associateAccount);
+
+        // Make Entry in Transaction table
+        BankTransaction bankTransaction = new BankTransaction(Constants.DEPOSIT, new Date(), amount, currentBalance + amount, Constants.DEPOSIT_DESCRIPTION, associateAccount);
+        bankTansactionRepository.save(bankTransaction);
+
+        return amount;
+    }
+
+    @PostMapping("/api/wallet/{walletId}/account/{trasferFromAccountId}/transfer/wallet/{toWalletId}/account/{transferToAccountId}/amount/{amount}")
+    public float transfer(@PathVariable ("walletId") int walletId,
+                          @PathVariable ("trasferFromAccountId") int trasferFromAccountId,
+                          @PathVariable ("toWalletId") int toWalletId,
+                          @PathVariable ("transferToAccountId") int transferToAccountId,
+                          @PathVariable ("amount") float amount) throws WalletIdDoesNotExist,
+            AccountNotAssociatedWithWallet, InsufficientBalanceInWallet{
+
+        withdraw(walletId, trasferFromAccountId, amount);
+
+        deposit(toWalletId, transferToAccountId, amount);
+
+        return amount;
+    }
+
+    @GetMapping("/api/wallet/{walletId}/account/{accountId}/lastNTransactions/{n}")
+    public List<BankTransaction> getStatement(@PathVariable ("walletId") int walletId,
+                                        @PathVariable ("accountId") int accountId,
+                                        @PathVariable ("n") int n)
+        throws  WalletIdDoesNotExist, AccountNotAssociatedWithWallet {
+
+        Wallet wallet = walletRepository.findById(walletId).orElse(null);
+
+        handleWalletAccountException(wallet, walletId, accountId);
+
+        List<BankTransaction> bankTransactions = ((List<Account>)wallet.getAccountsInWallet()).get(0).getBankTransactions();
+
+        Collections.sort(bankTransactions, new BankTransactionSortingComparator());
+
+        return bankTransactions.subList(0, n);
+    }
+
+
+
 
 
 }
