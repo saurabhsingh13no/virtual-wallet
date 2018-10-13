@@ -88,6 +88,19 @@ I used `Postman` for this, since it provides easy interface for sending post req
 
 e.g. Lets create a wallet for ** Dan Brown** our 4th user in the database. We would **post** request to `http://localhost:8080/api/wallet/` using below JSON format :
 
+```{JSON}
+{
+	"walletId" : 4,
+	"walletOfCustomer" : {
+		"userId": 4,
+		"fname" : "Dan",
+		"lname":"Brown",
+		"email" :"dan@brown"
+	}
+}
+
+```
+
 <a href="https://ibb.co/gY5t9U"><img src="https://preview.ibb.co/coaFOp/create-wallet.png" alt="create-wallet" border="0"></a>
 
 You can now check, that wallet 4 is now associated with user 4 :
