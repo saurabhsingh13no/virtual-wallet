@@ -101,12 +101,29 @@ public class WalletService {
             @PathVariable("accountId") int accountId,
             @PathVariable("amount") float amount) throws WalletIdDoesNotExist,
             InsufficientBalanceInWallet, AccountNotAssociatedWithWallet {
+
+        // withdraw amount from account
+        float currentBalance = withdrawHelper(walletId, accountId, amount);
+        Account associateAccount = ((List<Account>) accountRepository.findAccountByNumber(accountId)).get(0);
+
+        // Make Entry in Transaction table
+        makeEntryInTransaction(Constants.WITHDRAW, amount, currentBalance - amount, Constants.WITHDRAW_DESCRIPTION, associateAccount);
+
+        return amount;
+    }
+
+    /**
+     * Method that handles the withdrawl from account
+     * @param walletId : Wallet from which the amount is to be withdrawn
+     * @param accountId : Account from which the amount is to be withdrawn
+     * @param amount : Amount to be withdrawn
+     */
+    private float withdrawHelper(int walletId, int accountId, float amount) throws WalletIdDoesNotExist,
+            AccountNotAssociatedWithWallet, InsufficientBalanceInWallet{
         Wallet wallet = walletRepository.findById(walletId).orElse(null);
-
         handleWalletAccountException(wallet, walletId, accountId);
-
         // handle account in wallet does not sufficient balance
-        if (getAccountBalance(walletId, accountId) <= amount) {
+        if (getAccountBalance(walletId, accountId) < amount) {
             throw new InsufficientBalanceInWallet(walletId);
         }
 
@@ -116,11 +133,7 @@ public class WalletService {
         associateAccount.setBalance(currentBalance - amount);
         accountRepository.save(associateAccount);
 
-        // Make Entry in Transaction table
-        BankTransaction bankTransaction = new BankTransaction(Constants.WITHDRAW, new Date(), amount, currentBalance - amount, Constants.WITHDRAW_DESCRIPTION, associateAccount);
-        bankTansactionRepository.save(bankTransaction);
-
-        return amount;
+        return currentBalance;
     }
 
     // Handle exception if :
@@ -147,6 +160,24 @@ public class WalletService {
     public float deposit(@PathVariable("walletId") int walletId,
                          @PathVariable("accountId") int accountId,
                          @PathVariable("amount") float amount) throws WalletIdDoesNotExist, AccountNotAssociatedWithWallet {
+
+
+        float currentBalance = deposit_helper(walletId, accountId, amount);
+        Account associateAccount = ((List<Account>) accountRepository.findAccountByNumber(accountId)).get(0);
+        // Make Entry in Transaction table
+        makeEntryInTransaction(Constants.DEPOSIT, amount, currentBalance + amount, Constants.DEPOSIT_DESCRIPTION, associateAccount);
+
+        return amount;
+    }
+
+    /**
+     * Method that handles the deposit to account
+     * @param walletId : Wallet to which the amount is to be depositted
+     * @param accountId : Account to which the amount is to be depositted
+     * @param amount : Amount to be depositted
+     */
+    public float deposit_helper(int walletId, int accountId, float amount) throws WalletIdDoesNotExist,
+            AccountNotAssociatedWithWallet{
         Wallet wallet = walletRepository.findById(walletId).orElse(null);
 
         handleWalletAccountException(wallet, walletId, accountId);
@@ -157,11 +188,20 @@ public class WalletService {
         associateAccount.setBalance(currentBalance + amount);
         accountRepository.save(associateAccount);
 
-        // Make Entry in Transaction table
-        BankTransaction bankTransaction = new BankTransaction(Constants.DEPOSIT, new Date(), amount, currentBalance + amount, Constants.DEPOSIT_DESCRIPTION, associateAccount);
-        bankTansactionRepository.save(bankTransaction);
+        return currentBalance;
+    }
 
-        return amount;
+    /**
+     * Method is used to make entry into BankTransaction table for the appropriate transaction - deposit, withdrawl or transfer
+     * @param amount : Amount to be deposited || withdrawn || transferred
+     * @param postBalance : Balance in account after transaction has occurred
+     * @param description : Custom String description associated with deposit || withdrawl || transfer
+     * @param associatedAccount : Account associated with the transaction
+     */
+    private void makeEntryInTransaction(String typeOfTransaction, float amount, float postBalance, String description, Account associatedAccount) {
+        BankTransaction bankTransaction = new BankTransaction(typeOfTransaction, new Date(), amount, postBalance, description, associatedAccount);
+
+        bankTansactionRepository.save(bankTransaction);
     }
 
     @PostMapping("/api/wallet/{walletId}/account/{trasferFromAccountId}/transfer/wallet/{toWalletId}/account/{transferToAccountId}/amount/{amount}")
@@ -172,9 +212,34 @@ public class WalletService {
                           @PathVariable ("amount") float amount) throws WalletIdDoesNotExist,
             AccountNotAssociatedWithWallet, InsufficientBalanceInWallet{
 
-        withdraw(walletId, trasferFromAccountId, amount);
+        // Check if account is linked correctly to wallet both for transferer and reciepient
+        Wallet wallet = walletRepository.findById(walletId).orElse(null);
+        handleWalletAccountException(wallet, walletId, trasferFromAccountId);
 
-        deposit(toWalletId, transferToAccountId, amount);
+        wallet = walletRepository.findById(toWalletId).orElse(null);
+        handleWalletAccountException(wallet, toWalletId, transferToAccountId);
+
+        // Withdraw
+        float currentBalance = withdrawHelper(walletId, trasferFromAccountId, amount);
+        Account associateAccount = ((List<Account>) accountRepository.findAccountByNumber(trasferFromAccountId)).get(0);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("$")
+                .append(amount)
+                .append(" transferred to accountId : ")
+                .append(transferToAccountId);
+        makeEntryInTransaction(Constants.TRANSFER, amount, currentBalance - amount, stringBuilder.toString(), associateAccount);
+
+        // deposit
+        currentBalance = deposit_helper(toWalletId, transferToAccountId, amount);
+        Account associateAccount2 = ((List<Account>)accountRepository.findAccountByNumber(transferToAccountId)).get(0);
+        StringBuilder stringBuilder1 = new StringBuilder();
+        stringBuilder1
+                .append("$")
+                .append(amount)
+                .append(" transferred from accountId : ")
+                .append(trasferFromAccountId);
+        makeEntryInTransaction(Constants.TRANSFER, amount, currentBalance + amount, stringBuilder1.toString(), associateAccount2);
 
         return amount;
     }
@@ -193,11 +258,10 @@ public class WalletService {
 
         Collections.sort(bankTransactions, new BankTransactionSortingComparator());
 
+        // handling length of last N transactions
+        n = bankTransactions.size()>=n?n:bankTransactions.size();
         return bankTransactions.subList(0, n);
     }
-
-
-
 
 
 }
