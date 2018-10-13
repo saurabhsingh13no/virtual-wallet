@@ -2,7 +2,7 @@
 
 This project is about  *Building a Java library for online banking platform to build the virtual wallet to track users transaction account.*
 
-This is a spring boot application with in memory database *H2*.
+This is a spring boot application with in memory database *H2*. I am using JPA(Java Persistance API) to interact with the in memory database.
 
 
 ## Problem Statement
