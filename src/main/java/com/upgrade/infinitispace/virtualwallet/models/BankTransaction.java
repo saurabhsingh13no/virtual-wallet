@@ -26,6 +26,15 @@ public class BankTransaction implements Serializable {
     public BankTransaction() {
     }
 
+    public BankTransaction(String type, Date timestamp, float amount, float postBalance, String description, Account transactionFromAccount) {
+        this.type = type;
+        this.timestamp = timestamp;
+        this.amount = amount;
+        this.postBalance = postBalance;
+        this.description = description;
+        this.transactionFromAccount = transactionFromAccount;
+    }
+
     public int getTransactionId() {
         return transactionId;
     }

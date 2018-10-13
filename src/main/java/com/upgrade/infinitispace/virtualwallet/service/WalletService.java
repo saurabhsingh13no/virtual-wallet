@@ -1,15 +1,20 @@
 package com.upgrade.infinitispace.virtualwallet.service;
 
-import com.upgrade.infinitispace.virtualwallet.exception.CustomerAlreadyHasWallet;
+import com.upgrade.infinitispace.virtualwallet.constant.Constants;
+import com.upgrade.infinitispace.virtualwallet.exception.*;
 import com.upgrade.infinitispace.virtualwallet.models.Account;
+import com.upgrade.infinitispace.virtualwallet.models.BankTransaction;
 import com.upgrade.infinitispace.virtualwallet.models.Customer;
 import com.upgrade.infinitispace.virtualwallet.models.Wallet;
 import com.upgrade.infinitispace.virtualwallet.repository.AccountRepository;
 import com.upgrade.infinitispace.virtualwallet.repository.CustomerRepository;
 import com.upgrade.infinitispace.virtualwallet.repository.WalletRepository;
+import com.upgrade.infinitispace.virtualwallet.repository.BankTansactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,6 +26,8 @@ public class WalletService {
     AccountRepository accountRepository;
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    BankTansactionRepository bankTansactionRepository;
 
 
     @GetMapping("/api/wallet")
@@ -58,22 +65,76 @@ public class WalletService {
         return wallet.getAccountsInWallet();
     }
 
-    // Return current account balance - balance in wallet (wallet can have multiple accounts
-    @GetMapping("/api/wallet/{walletId}/balance")
-    public float getAccountBalance(
-            @PathVariable("walletId") int walletId) {
+    // Return current account balance - balance in wallet (wallet can have multiple accounts)
+    @GetMapping("/api/wallet/{walletId}/account/{accountId}/balance")
+    public float getAccountBalance (
+            @PathVariable("walletId") int walletId,
+            @PathVariable("accountId") int accountId) throws WalletIdDoesNotExist, AccountNotAssociatedWithWallet {
         Wallet wallet = walletRepository.findById(walletId).orElse(null);
-        if (wallet!=null) {
+
+        // handle walletId does not exist
+        if (wallet==null) {
+            throw new WalletIdDoesNotExist(walletId);
+        }
+        else {
             List<Account> accounts = wallet.getAccountsInWallet();
             float balance = 0.0f;
+
+            // handle: account is not linked to wallet
+            List<Integer> associatedAccounts = new ArrayList<>();
+            for (Account account : wallet.getAccountsInWallet()) {
+                associatedAccounts.add(account.getAccountNumber());
+            }
+            if (!associatedAccounts.contains(accountId)) {
+                throw new AccountNotAssociatedWithWallet(walletId, accountId);
+            }
+
             for (Account account : accounts) {
-                balance += account.getBalance();
+                if (account.getAccountNumber()==accountId) balance += account.getBalance();
             }
             return balance;
         }
-        else return 0.0f;
     }
 
+    @PostMapping("/api/wallet/{walletId}/account/{accountId}/withdraw/{amount}")
+    public float withdraw(
+            @PathVariable("walletId") int walletId,
+            @PathVariable("accountId") int accountId,
+            @PathVariable("amount") float amount) throws WalletIdDoesNotExist,
+            InsufficientBalanceInWallet, AccountNotAssociatedWithWallet {
+        Wallet wallet = walletRepository.findById(walletId).orElse(null);
+
+        // handle: wallet does not exist
+        if (wallet == null) {
+            throw new WalletIdDoesNotExist(walletId);
+        }
+
+        // handle: account is not linked to wallet
+        List<Integer> associatedAccounts = new ArrayList<>();
+        for (Account account : wallet.getAccountsInWallet()) {
+            associatedAccounts.add(account.getAccountNumber());
+        }
+        if (!associatedAccounts.contains(accountId)) {
+            throw new AccountNotAssociatedWithWallet(walletId, accountId);
+        }
+
+        // handle account in wallet does not sufficient balance
+        if (getAccountBalance(walletId, accountId) <= amount) {
+            throw new InsufficientBalanceInWallet(walletId);
+        }
+
+        // withdraw amount
+        Account associateAccount = ((List<Account>) accountRepository.findAccountByNumber(accountId)).get(0);
+        float currentBalance = associateAccount.getBalance();
+        associateAccount.setBalance(currentBalance - amount);
+        accountRepository.save(associateAccount);
+
+        // Make Entry in Transaction table
+        BankTransaction bankTransaction = new BankTransaction(Constants.WITHDRAW, new Date(), amount, currentBalance - amount, Constants.WITHDRAW_DESCRIPTION, associateAccount);
+        bankTansactionRepository.save(bankTransaction);
+
+        return amount;
+    }
 
 
 }
