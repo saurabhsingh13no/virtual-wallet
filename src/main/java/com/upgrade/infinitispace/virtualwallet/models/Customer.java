@@ -14,6 +14,7 @@ public class Customer implements Serializable {
     private int userId;
     private String fname;
     private String lname;
+    @Column(unique=true)
     private String email;
 
     @OneToOne(mappedBy = "walletOfCustomer")
@@ -21,6 +22,7 @@ public class Customer implements Serializable {
     private Wallet wallet;
 
     @OneToMany(mappedBy = "accountHolder")
+    @JsonIgnore
     private List<Account> customerAccounts;
 
     private static final long serialVersionUID = 1L;

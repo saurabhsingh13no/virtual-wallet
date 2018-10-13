@@ -14,6 +14,7 @@ public class Wallet implements Serializable {
     private int walletId;
 
     @OneToMany(mappedBy = "walletHolder")
+    @JsonIgnore
     private List<Account> accountsInWallet;
 
     @OneToOne
