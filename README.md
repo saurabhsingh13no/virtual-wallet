@@ -7,7 +7,7 @@ This is a spring boot application with in memory database *H2*. I am using JPA(J
 
 ## Problem Statement
 
-Infiniti Space Bank is launching a brand new online banking platform and they want you to build a Java library to build the
+Infiniti Space Bank is launching a brand new online banking platform and they want us to build a Java library to build the
 virtual wallet to track users transaction account. https://en.wikipedia.org/wiki/Transaction_account .
 At a high level the library needs to solve the following business needs
 * Track a user’s account balance
