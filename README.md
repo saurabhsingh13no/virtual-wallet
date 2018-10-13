@@ -21,7 +21,7 @@ At a high level the library needs to solve the following business needs
 Following UML diagram indicates the database tables and thier interaction which I am using.
 
 
-<a href="https://ibb.co/kjd8Op"><img src="https://preview.ibb.co/b7fcG9/virtual-wallet-UML.png" alt="virtual-wallet-UML" border="0"></a>
+<a href="https://ibb.co/nJNLOp"><img src="https://preview.ibb.co/b74Zip/UML-2.png" alt="UML-2" border="0"></a>
 
 ## How to run the project
 
