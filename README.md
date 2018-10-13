@@ -188,7 +188,7 @@ Let us confirm the transfer by checking in the database :
 
 * ### g) Return last N transactions for an account :
 
-Provoded endpoint :  `http://localhost:8080/api/wallet/{walletId}/account/{accountId}/lastNTransactions/{n}`.
+Provided endpoint :  `http://localhost:8080/api/wallet/{walletId}/account/{accountId}/lastNTransactions/{n}`.
 
 Allows one to check their respect transaction statement.
 
