@@ -62,7 +62,7 @@ Since project uses *H2* in-memory database, some sample data has already been pr
 
 <a href="https://ibb.co/cpRrUU"><img src="https://preview.ibb.co/nrHy9U/H2-starting-session.png" alt="H2-starting-session" border="0"></a>
 
-** Make sure **  that you use `jdbc:h2:mem:testdb` as JDBC URL. Click connect.
+**Make sure**  that you use `jdbc:h2:mem:testdb` as JDBC URL. Click connect.
 
 Enter below select queries to see the output :
 
