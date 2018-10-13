@@ -1,6 +1,8 @@
 ## About
 
-This project is an *Building a Java library for online banking platform to build the virtual wallet to track users transaction account.*
+This project is about  *Building a Java library for online banking platform to build the virtual wallet to track users transaction account.*
+
+This is a spring boot application with in memory database *H2*.
 
 
 ## Problem Statement
@@ -16,5 +18,111 @@ At a high level the library needs to solve the following business needs
 
 ## UML Diagram
 
+Following UML diagram indicates the database tables and thier interaction which I am using.
+
 
 <a href="https://ibb.co/kjd8Op"><img src="https://preview.ibb.co/b7fcG9/virtual-wallet-UML.png" alt="virtual-wallet-UML" border="0"></a>
+
+## How to run the project
+
+Following steps illustrate procedures you need to follow to run the code :
+
+`Step 1` : Download the repository
+
+```{shell}
+$ git clone https://github.com/saurabhsingh13no/virtual-wallet.git
+$ cd virtual-wallet
+```
+
+`Step 2` : Build the project using maven
+
+```{shell}
+$ mvn clean install
+```
+
+`Step 3` : run the project
+
+```
+$ mvn spring-boot:run
+```
+
+* Now navigate to http://localhost:8080/ . You would see something like below index.html page :
+
+<a href="https://ibb.co/bwuH3p"><img src="https://preview.ibb.co/mykPip/landing-page.png" alt="landing-page" border="0"></a>
+
+Congratulations. You have successfully cloned the repo.
+
+## Functionality
+
+Since project uses *H2* in-memory database, some sample data has already been provided to get started with. Below are snapshot of data that already exists in the table :
+
+<a href="https://ibb.co/c4TAOp"><img src="https://preview.ibb.co/m5bapU/sample-data2.png" alt="sample-data2" border="0"></a>
+
+* You can see the entries in the table for yourself. Navigate to `http://localhost:8080/h2-console` .You would see below screen :
+
+<a href="https://ibb.co/cpRrUU"><img src="https://preview.ibb.co/nrHy9U/H2-starting-session.png" alt="H2-starting-session" border="0"></a>
+
+** Make sure **  that you use `jdbc:h2:mem:testdb` as JDBC URL. Click connect.
+
+Enter below select queries to see the output :
+
+```{sql}
+select * from customer;
+select * from wallet;
+select * from account;
+select * from bank_transaction;
+```
+
+Press `ctrl+enter`.
+
+Now, I think you are all set up. Lets see what this library can do :
+
+* ### a) Create a new wallet for a user :
+
+Provided endpoint for creating new wallet :
+```
+/api/wallet
+```
+
+I used `Postman` for this, since it provides easy interface for sending post request.
+
+e.g. Lets create a wallet for ** Dan Brown** our 4th user in the database. We would **post** request to `http://localhost:8080/api/wallet/` using below JSON format :
+
+<a href="https://ibb.co/gY5t9U"><img src="https://preview.ibb.co/coaFOp/create-wallet.png" alt="create-wallet" border="0"></a>
+
+You can now check, that wallet 4 is now associated with user 4 :
+
+<a href="https://ibb.co/ex6fOp"><img src="https://preview.ibb.co/fVgEip/after-create-wallet.png" alt="after-create-wallet" border="0"></a>
+
+* ### b) Attach an account to user 4 (Dan in this case) :
+
+Provided endpoint : `http://localhost:8080/api/account/`
+
+use post request as :
+```{JSON}
+{
+	"accountNumber" : 3001,
+	"balance":4000,
+	"accountHolder" : {
+		"userId": 4,
+		"fname" : "Dan",
+		"lname":"Brown",
+		"email" :"dan@brown"
+	},
+	"walletHolder" : {
+		"walletId" : 4
+	}
+}
+```
+
+* ### c) Return current account balance :
+
+Provided endpoint : `http://localhost:8080/api/wallet/{walletId}/account/{accountId}/balance`.
+
+e.g Let us check balance for User 1 and associated account number 1000. We would use a **GET** request to `http://localhost:8080/api/wallet/1/account/1000/balance`. Below is the output from postman :
+
+<a href="https://ibb.co/dinvOp"><img src="https://preview.ibb.co/e8eWw9/get-balance.png" alt="get-balance" border="0"></a>
+
+The backend JAVA code checks for all validation. If the accountId is not associated with provided walledId, an exception is thrown.
+
+* ### d) Perform a withdrawal transaction on an account :
