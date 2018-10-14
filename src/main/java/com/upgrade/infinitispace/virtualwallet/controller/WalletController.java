@@ -1,13 +1,6 @@
 package com.upgrade.infinitispace.virtualwallet.controller;
-
-import com.upgrade.infinitispace.virtualwallet.comparator.BankTransactionSortingComparator;
-import com.upgrade.infinitispace.virtualwallet.constant.Constants;
 import com.upgrade.infinitispace.virtualwallet.exception.*;
 import com.upgrade.infinitispace.virtualwallet.models.*;
-import com.upgrade.infinitispace.virtualwallet.repository.AccountRepository;
-import com.upgrade.infinitispace.virtualwallet.repository.CustomerRepository;
-import com.upgrade.infinitispace.virtualwallet.repository.WalletRepository;
-import com.upgrade.infinitispace.virtualwallet.repository.BankTansactionRepository;
 import com.upgrade.infinitispace.virtualwallet.services.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,16 +11,6 @@ import java.util.*;
 
 @RestController
 public class WalletController {
-
-    @Autowired
-    WalletRepository walletRepository;
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    CustomerRepository customerRepository;
-    @Autowired
-    BankTansactionRepository bankTansactionRepository;
-
 
     @Autowired
     WalletService walletService;
