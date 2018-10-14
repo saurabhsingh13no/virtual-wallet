@@ -54,7 +54,6 @@ public class WalletServiceImpl implements WalletService{
             w.setAccountsInWallet(new ArrayList<>(c.getCustomerAccounts()));
         }
         return  walletRepository.save(w);
-
     }
 
     @Override
