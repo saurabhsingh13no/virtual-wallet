@@ -52,6 +52,8 @@ $ mvn spring-boot:run
 
 Congratulations. You have successfully cloned the repo.
 
+* **Note** : If you want to check the test coverage, open the project in *IntelliJ* and right click on project and click *run with coverage>All tests*
+
 ## Functionality
 
 Since project uses *H2* in-memory database, some sample data has already been provided to get started with. Below are snapshot of data that already exists in the table :
@@ -114,16 +116,12 @@ Provided endpoint : `http://localhost:8080/api/account/`
 use post request as :
 ```{JSON}
 {
-	"accountNumber" : 3001,
 	"balance":4000,
 	"accountHolder" : {
 		"userId": 4,
 		"fname" : "Dan",
 		"lname":"Brown",
 		"email" :"dan@brown"
-	},
-	"walletHolder" : {
-		"walletId" : 4
 	}
 }
 ```
@@ -138,7 +136,7 @@ Provided endpoint : `http://localhost:8080/api/wallet/{walletId}/account/{accoun
 
 e.g Let us check balance for User 1 and associated account number 1000. We would use a **GET** request to `http://localhost:8080/api/wallet/1/account/1000/balance`. Below is the output from postman :
 
-<a href="https://ibb.co/dinvOp"><img src="https://preview.ibb.co/e8eWw9/get-balance.png" alt="get-balance" border="0"></a>
+<a href="https://ibb.co/ewKAr9"><img src="https://preview.ibb.co/cPjbW9/check-balance.png" alt="check-balance" border="0"></a>
 
 
 The backend JAVA code checks for all validation. If the accountId is not associated with provided walledId, an exception is thrown.
@@ -151,7 +149,7 @@ Allows one to withdraw amount from account associated with wallet.
 
 e.g. Lets withdraw $100 from accountId 1000 associated with walletId 1. I use **POST** request to `http://localhost:8080/api/wallet/1/account/1000/withdraw/100` in Postman. Following is the output :
 
-<a href="https://ibb.co/j8eaOp"><img src="https://preview.ibb.co/c3Gdb9/withdraw.png" alt="withdraw" border="0"></a>
+<a href="https://ibb.co/gk3mW9"><img src="https://preview.ibb.co/ex1Jdp/withdraw.png" alt="withdraw" border="0"></a>
 
 We can now check that $100 was actually withdrawn from the account as is reflected in the database :
 
@@ -165,7 +163,7 @@ Allows one to deposit amount into an account associated with a wallet.
 
 e.g. Lets deposit $200 to accountId 1000 associated with walletId 1. I use **POST** request to `http://localhost:8080/api/wallet/1/account/1000/deposit/200` in Postman. Following is the output :
 
-<a href="https://ibb.co/kJCy9U"><img src="https://preview.ibb.co/cC5J9U/deposit.png" alt="deposit" border="0"></a>
+<a href="https://ibb.co/exd9jU"><img src="https://preview.ibb.co/ifP4Jp/deposit.png" alt="deposit" border="0"></a>
 
 We can now check that account 1000 does have a new deposit of $200 by running select query on table account :
 
@@ -180,7 +178,7 @@ Allows one to transfer money from one account in one wallet to another account i
 
 e.g. Let us transfer $150 from accountId 1000 associated with walletId 1 to accountId 2000 associated with wallet 2 . I use a **POST** request to `http://localhost:8080/api/wallet/1/account/1000/transfer/wallet/2/account/2000/amount/150` in Postman. Following is the output :
 
-<a href="https://ibb.co/e7F1UU"><img src="https://preview.ibb.co/gfrapU/transfer.png" alt="transfer" border="0"></a>
+<a href="https://ibb.co/bF4Ar9"><img src="https://preview.ibb.co/jib1yp/transfer.png" alt="transfer" border="0"></a>
 
 Let us confirm the transfer by checking in the database :
 
@@ -194,4 +192,4 @@ Allows one to check their respect transaction statement.
 
 e.g. Let us check for last 3 transactions for accountId 1000 associated with walletId 1. I use a **GET** request to `http://localhost:8080/api/wallet/1/account/1000/lastNTransactions/3` in Postman. Following is the output :
 
-<a href="https://ibb.co/myKyb9"><img src="https://preview.ibb.co/jYRN3p/last-Ntransaction.png" alt="last-Ntransaction" border="0"></a>
+<a href="https://ibb.co/h6Os4U"><img src="https://preview.ibb.co/fZnKjU/last-NTransations.png" alt="last-NTransations" border="0"></a>
