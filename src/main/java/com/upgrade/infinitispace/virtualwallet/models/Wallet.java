@@ -14,7 +14,6 @@ public class Wallet implements Serializable {
     private int walletId;
 
     @OneToMany(mappedBy = "walletHolder")
-    @JsonIgnore
     private List<Account> accountsInWallet;
 
     @OneToOne
@@ -40,6 +39,9 @@ public class Wallet implements Serializable {
 
     public void setAccountsInWallet(List<Account> accountsInWallet) {
         this.accountsInWallet = accountsInWallet;
+        for (Account account : accountsInWallet) {
+            account.setWalletHolder(this);
+        }
     }
 
     public Customer getWalletOfCustomer() {
@@ -47,6 +49,7 @@ public class Wallet implements Serializable {
     }
 
     public void setWalletOfCustomer(Customer walletOfCustomer) {
+
         this.walletOfCustomer = walletOfCustomer;
     }
 }

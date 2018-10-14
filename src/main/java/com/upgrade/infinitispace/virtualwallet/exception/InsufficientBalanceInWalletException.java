@@ -1,8 +1,8 @@
 package com.upgrade.infinitispace.virtualwallet.exception;
 
-public class InsufficientBalanceInWallet extends Exception {
+public class InsufficientBalanceInWalletException extends Exception {
 
-    public InsufficientBalanceInWallet(int walletId) {
+    public InsufficientBalanceInWalletException(int walletId) {
         super("Wallet with walletId : "+walletId+" does not have sufficient balance");
     }
 }

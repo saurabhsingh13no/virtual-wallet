@@ -1,4 +1,4 @@
-package com.upgrade.infinitispace.virtualwallet.service;
+package com.upgrade.infinitispace.virtualwallet.controller;
 
 
 import com.upgrade.infinitispace.virtualwallet.models.Customer;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class CustomerService {
+public class CustomerController {
 
     @Autowired
     CustomerRepository customerRepository;

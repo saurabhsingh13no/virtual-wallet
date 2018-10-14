@@ -15,11 +15,11 @@ public class Account implements Serializable {
     private float balance;
 
     @ManyToOne
-//    @JsonIgnore
+    //@JsonIgnore
     private Customer accountHolder;
 
     @ManyToOne
-//    @JsonIgnore
+    @JsonIgnore
     private Wallet walletHolder;
 
     @OneToMany(mappedBy = "transactionFromAccount")
