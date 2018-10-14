@@ -101,7 +101,9 @@ We can now check that Account 3001 is now associated with userId 4 and no wallet
 <a href="https://ibb.co/eB31g9"><img src="https://preview.ibb.co/k6zJTp/add-Account.png" alt="add-Account" border="0"></a>
 
 
-* ### b) Create a new wallet for a user : I am assuming a user can have multiple accounts.
+* ### b) Create a new wallet for a user :
+
+I am assuming a user can have multiple accounts.
 
 Provided endpoint for creating new wallet :
 ```
