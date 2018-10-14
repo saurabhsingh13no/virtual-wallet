@@ -79,37 +79,7 @@ Press `ctrl+enter`.
 
 Now, I think you are all set up. Lets see what this library can do :
 
-* ### a) Create a new wallet for a user :
-
-Provided endpoint for creating new wallet :
-```
-http://localhost:8080/api/wallet
-```
-
-I used `Postman` for this, since it provides easy interface for sending post request.
-
-e.g. Lets create a wallet for ** Dan Brown** our 4th user in the database. We would **post** request to `http://localhost:8080/api/wallet/` using below JSON format :
-
-```{JSON}
-{
-	"walletId" : 4,
-	"walletOfCustomer" : {
-		"userId": 4,
-		"fname" : "Dan",
-		"lname":"Brown",
-		"email" :"dan@brown"
-	}
-}
-
-```
-
-<a href="https://ibb.co/gY5t9U"><img src="https://preview.ibb.co/coaFOp/create-wallet.png" alt="create-wallet" border="0"></a>
-
-You can now check, that wallet 4 is now associated with user 4 :
-
-<a href="https://ibb.co/ex6fOp"><img src="https://preview.ibb.co/fVgEip/after-create-wallet.png" alt="after-create-wallet" border="0"></a>
-
-* ### b) Attach an account to user 4 (Dan in this case) :
+* ### a) Add an account to user 4 (Dan in this case) :
 
 Provided endpoint : `http://localhost:8080/api/account/`
 
@@ -126,9 +96,28 @@ use post request as :
 }
 ```
 
-We can now check that Account 3001 is now associated with walletId 4 :
+We can now check that Account 3001 is now associated with userId 4 and no wallet:
 
-<a href="https://ibb.co/javob9"><img src="https://preview.ibb.co/b7OwUU/after-add-account.png" alt="after-add-account" border="0"></a>
+<a href="https://ibb.co/eB31g9"><img src="https://preview.ibb.co/k6zJTp/add-Account.png" alt="add-Account" border="0"></a>
+
+
+* ### b) Create a new wallet for a user :
+
+Provided endpoint for creating new wallet :
+```
+http://localhost:8080/api/wallet/{customerId}
+```
+
+I used `Postman` for this, since it provides easy interface for sending post request.
+
+e.g. Lets create a wallet for ** Dan Brown** our 4th user in the database. We would **post** request to `http://localhost:8080/api/wallet/4` using below JSON format :
+
+
+<a href="https://ibb.co/hw4tB9"><img src="https://preview.ibb.co/ertmW9/create-wallet.png" alt="create-wallet" border="0"></a>
+
+You can now check, that wallet 4 is now associated with user 4 :
+
+<a href="https://ibb.co/bWxzZU"><img src="https://preview.ibb.co/k8vWg9/create-Wallet.png" alt="create-Wallet" border="0"></a>
 
 * ### c) Return current account balance :
 

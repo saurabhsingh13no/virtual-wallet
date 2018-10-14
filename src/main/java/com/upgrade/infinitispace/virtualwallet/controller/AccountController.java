@@ -20,17 +20,6 @@ public class AccountController {
     @Autowired
     CustomerRepository customerRepository;
 
-/*    @GetMapping("/api/account")
-    public List<Account> findAllAccounts() {
-        return (List<Account>)accountRepository.findAll();
-    }*/
-
-    /*@GetMapping("/api/account/{accountNumber}")
-    public Account findAccountByNumber(
-            @PathVariable("accountNumber") int accountNumber) {
-        return accountRepository.findById(accountNumber).orElse(null);
-    }*/
-
     @PostMapping("/api/account")
     public Account createAccount(@RequestBody Account account) {
         return accountRepository.save(account);

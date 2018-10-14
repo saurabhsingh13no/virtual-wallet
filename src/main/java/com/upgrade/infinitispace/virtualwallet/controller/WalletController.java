@@ -32,19 +32,6 @@ public class WalletController {
     @Autowired
     WalletService walletService;
 
-
-   /* @GetMapping("/api/wallet")
-    public List<Wallet> findAllWallets(){
-
-        return (List<Wallet>)walletRepository.findAll();
-    }
-
-    @GetMapping("/api/wallet/{walletId}")
-    public Wallet findWalletById(@PathVariable("walletId") int id) {
-
-        return walletRepository.findById(id).orElse(null);
-    }*/
-
     // Create a new wallet for a user. Constraint : A user can have only one wallet
     @PostMapping("/api/wallet/{customerId}")
     public ResponseEntity<ServiceResponse> createWallet(@PathVariable("customerId") int customerId) throws CustomerAlreadyHasWalletException {
@@ -70,14 +57,6 @@ public class WalletController {
         }
 
     }
-
-    /*// Return all account listed
-    @GetMapping("/api/wallet/{walletId}/accounts")
-    public List<Account> findAccountsListed(
-            @PathVariable("walletId") int walletId) {
-        Wallet wallet = walletRepository.findById(walletId).orElse(null);
-        return wallet.getAccountsInWallet();
-    }*/
 
     // Return current account balance - balance in wallet (wallet can have multiple accounts)
     @GetMapping("/api/wallet/{walletId}/account/{accountId}/balance")
@@ -167,21 +146,6 @@ public class WalletController {
             response.setDescription(e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.EXPECTATION_FAILED);
         }
-    }
-
-
-
-    /**
-     * Method is used to make entry into BankTransaction table for the appropriate transaction - deposit, withdrawl or transfer
-     * @param amount : Amount to be deposited || withdrawn || transferred
-     * @param postBalance : Balance in account after transaction has occurred
-     * @param description : Custom String description associated with deposit || withdrawl || transfer
-     * @param associatedAccount : Account associated with the transaction
-     */
-    private void makeEntryInTransaction(String typeOfTransaction, float amount, float postBalance, String description, Account associatedAccount) {
-        BankTransaction bankTransaction = new BankTransaction(typeOfTransaction, new Date(), amount, postBalance, description, associatedAccount);
-
-        bankTansactionRepository.save(bankTransaction);
     }
 
     @PostMapping("/api/wallet/{fromWalletId}/account/{fromAccountId}/transfer/wallet/{toWalletId}/account/{toAccountId}/amount/{amount}")
