@@ -9,7 +9,7 @@ This is a spring boot application with in memory database *H2*. I am using JPA(J
 
 Infiniti Space Bank is launching a brand new online banking platform and they want you to build a Java library to build the
 virtual wallet to track users transaction account. https://en.wikipedia.org/wiki/Transaction_account .
-At a high level the library needs to solve the following business needs
+At high level the library needs to solve the following business needs
 * Track a user’s account balance
 * Manage account transactions in the form of debits (withdrawals) and credits (deposits).
 * Allow a user to transfer money to another user/account.
@@ -24,7 +24,7 @@ Refer to the follwing UML diagram indicating the database tables and their inter
 
 <a href="https://ibb.co/nJNLOp"><img src="https://preview.ibb.co/b74Zip/UML-2.png" alt="UML-2" border="0"></a>
 
-## How to run the project
+## Running the project
 
 Following steps illustrate procedures you need to follow to run the code :
 
