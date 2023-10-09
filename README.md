@@ -26,7 +26,7 @@ Refer to the follwing UML diagram indicating the database tables and their inter
 
 ## Running the project
 
-Following steps illustrate procedures you need to follow to run the code :
+Following steps illustrates the procedures you need to follow to run the code :
 
 `Step 1` : Download the repository
 
