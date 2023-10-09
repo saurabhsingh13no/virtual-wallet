@@ -18,7 +18,8 @@ At a high level the library needs to solve the following business needs
 
 ## UML Diagram
 
-Following UML diagram indicates the database tables and thier interaction which I am using.
+Refer to the follwing UML diagram indicating the database tables and their intersactions.
+
 
 
 <a href="https://ibb.co/nJNLOp"><img src="https://preview.ibb.co/b74Zip/UML-2.png" alt="UML-2" border="0"></a>
